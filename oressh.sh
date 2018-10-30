@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# for alias (for bash)
+shopt -s expand_aliases
+
+function oressh() {
+	[[ $# -le 0 ]] && echo "$0 hostname" && exit 1
+	local host=$1
+	if [[ $(uname) == "Darwin" ]]; then
+		alias local_base64encode='base64'
+		alias local_base64decode='base64 -D'
+	elif [[ $(uname -a) =~ "Ubuntu" ]]; then
+		alias local_base64encode='base64 -w 0'
+		alias local_base64decode='base64 -d'
+	else
+		echo 'no support os'
+		return 1
+	fi
+
+	local remote_base64decode="if [[ \$(uname) == Darwin ]]; then base64 -D; else base64 -d; fi"
+	# NOTE: bash-3.2ではなぜか正常な動作とならないので，macの場合には無理やりlocalの方のbashを参照
+	command ssh -t -t $host '$(( [[ -e /usr/local/bin/bash ]] && echo /usr/local/bin/bash ) || ( [[ -e /bin/bash ]] && echo /bin/bash )) --rcfile <( echo -e ' $({
+		cat <(echo 'function vim() { command vim -u <(echo '$(cat ~/dotfiles/.minimal.vimrc | local_base64encode)' | '$remote_base64decode') $@ ; }')
+		cat ~/dotfiles/.minimal.bashrc
+	} | local_base64encode) ' | ' "$remote_base64decode )"
+}
+
+oressh $1
