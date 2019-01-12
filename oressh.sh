@@ -19,10 +19,16 @@ function oressh() {
 
 	local remote_base64decode="if [[ \$(uname) == Darwin ]]; then base64 -D; else base64 -d; fi"
 	# NOTE: bash-3.2ではなぜか正常な動作とならないので，macの場合には無理やりlocalの方のbashを参照
-	command ssh -t -t $host '$(( [[ -e /usr/local/bin/bash ]] && echo /usr/local/bin/bash ) || ( [[ -e /bin/bash ]] && echo /bin/bash )) --rcfile <( echo -e ' $({
-		cat <(echo 'function vim() { command vim -u <(echo '$(cat ~/dotfiles/.minimal.vimrc | local_base64encode)' | '$remote_base64decode') $@ ; }')
-		cat ~/dotfiles/.minimal.bashrc
-	} | local_base64encode) ' | ' "$remote_base64decode )"
+	# NOTE: sh cannot parse $(() || ()) or [[ ]], and can't use process replace <(), so wrap entire command as bash
+	# NOTE: したがって，bashでwrapしている
+	# NOTE: 注意点として，shoptからlogin shellではないことになっている
+	local bash_cmd='$( ( [ -e /usr/local/bin/bash ] && echo /usr/local/bin/bash ) || ( [ -e /bin/bash ] && echo /bin/bash ) )'
+	command ssh -t -t $host "bash -c '$bash_cmd --rcfile <( echo -e " \
+		$({
+			cat <(echo 'function vim() { command vim -u <(echo '$(cat ~/dotfiles/.minimal.vimrc | local_base64encode)' | '$remote_base64decode') $@ ; }')
+			cat ~/dotfiles/.minimal.bashrc
+		} | local_base64encode) \
+		" | $remote_base64decode)'"
 }
 
 oressh $1
