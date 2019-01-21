@@ -9,7 +9,7 @@ function oressh() {
 
 	# NOTE: python base64 version
 	local remote_base64decode="python -c \"import base64; import sys; sys.stdout.write(base64.b64decode(sys.stdin.read()).decode(\\\"utf-8\\\"))\""
-	alias local_base64encode="python -c \"import base64; import sys; sys.stdout.write(base64.b64encode(sys.stdin.buffer.read()).decode('utf-8'))\""
+	alias local_base64encode="python -c \"import base64; import sys; sys.stdout.write(base64.b64encode(sys.stdin.read() if sys.version_info[0]<3 else sys.stdin.buffer.read()).decode('utf-8'))\""
 	alias local_base64decode="$remote_base64decode"
 
 	# NOTE: base64 command version
