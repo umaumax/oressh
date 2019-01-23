@@ -5,6 +5,18 @@ oreore ssh command
 ## NOTE
 * ssh先の環境を汚さずにoreore bashとoreore vimの設定を利用する
 * functionやaliasではsshpassから使用できないため，コマンドとして提供
+* defaultでpythonを利用して，base64のencodeとdecodeを行う(at both local host and remote host)
+  * env `NO_PYTHON_BASE64`に何かしらの値を設定すると`base64`コマンドを利用する
+
+## TODO
+* write help command
+* READMEの充実
+* readline for bash
+  * ~/.inputrcの設定も行いたいが，物理的にファイルを配置する必要性がありそうなので，副作用がある
+* hostの接続先によって、設定ファイルを選択する
+  * `~/.config/oressh/dotfiles/default/.bashrc`: 対応するhost_nameのdirがない場合
+  * `~/.config/oressh/dotfiles/common/.bashrc`: 共通の処理
+  * `~/.config/oressh/dotfiles/host_name/.bashrc`: each host
 
 ### for wgit
 ```
