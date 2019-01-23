@@ -34,7 +34,11 @@ function oressh() {
 	# NOTE: したがって，bashでwrapしている
 	# NOTE: 注意点として，shoptからlogin shellではないことになっている
 	local bash_cmd='$( ( [ -e /usr/local/bin/bash ] && echo /usr/local/bin/bash ) || ( [ -e /bin/bash ] && echo /bin/bash ) )'
-	command ssh -t -t $host "bash -c '$bash_cmd --rcfile <( echo -e " \
+
+	# FYI: [How to fix the /dev/fd/63: No such file or directory? – Site Title]( https://jaredsburrows.wordpress.com/2014/06/25/how-to-fix-the-devfd63-no-such-file-or-directory/ )
+	# NOTE: This command has side effect
+	local enable_process_substitution_cmd='[[ $USER == "root" ]] && [[ ! -e /dev/fd ]] && ln -s /proc/self/fd /dev/fd'
+	ssh -t -t $host "$enable_process_substitution_cmd; bash -c '$bash_cmd --rcfile <( echo -e " \
 		$({
 			cat <(echo 'function vim() { command vim -u <(echo '$(cat ~/dotfiles/.minimal.vimrc | local_base64encode)' | '$remote_base64decode') $@ ; }')
 			cat ~/dotfiles/.minimal.bashrc
