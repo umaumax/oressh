@@ -3,8 +3,10 @@
 # for alias (for bash)
 shopt -s expand_aliases
 
+mkdir -p ~/.config/oressh/
+
 function oressh() {
-	[[ $# -le 0 ]] && echo "$0 hostname" && exit 1
+	[[ $# -le 0 ]] && echo "$0 [hostname]" && exit 1
 	local host=$1
 
 	# NOTE: python base64 version
