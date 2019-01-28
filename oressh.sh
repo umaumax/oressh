@@ -50,12 +50,18 @@ function oressh() {
 	# NOTE: 注意点として，shoptからlogin shellではないことになっている
 	local bash_cmd='$( ( [ -e /usr/local/bin/bash ] && echo /usr/local/bin/bash ) || ( [ -e /bin/bash ] && echo /bin/bash ) )'
 
-	local inputrc_filepath=$(find_exist_file "$HOME/.config/oressh/$host/.inputrc" "$HOME/.config/oressh/default/.inputrc")
-	local vimrc_filepath=$(find_exist_file "$HOME/.config/oressh/$host/.vimrc" "$HOME/.config/oressh/default/.vimrc")
-	local bashrc_filepath=$(find_exist_file "$HOME/.config/oressh/$host/.bashrc" "$HOME/.config/oressh/default/.bashrc")
-	debug ".inpurc:[$inputrc_filepath]"
-	debug ".vimrc :[$vimrc_filepath]"
-	debug ".bashrc:[$bashrc_filepath]"
+	local default_inputrc_filepath=$(find_exist_file "$HOME/.config/oressh/$host/.inputrc" "$HOME/.config/oressh/default/.inputrc")
+	local default_vimrc_filepath=$(find_exist_file "$HOME/.config/oressh/$host/.vimrc" "$HOME/.config/oressh/default/.vimrc")
+	local default_bashrc_filepath=$(find_exist_file "$HOME/.config/oressh/$host/.bashrc" "$HOME/.config/oressh/default/.bashrc")
+	local inputrc_filepath_list=($default_inputrc_filepath)
+	local vimrc_filepath_list=($default_vimrc_filepath)
+	local bashrc_filepath_list=($default_bashrc_filepath)
+	[[ -f "$HOME/.config/oressh/$host/.local.inputrc" ]] && local inputrc_filepath_list+=($HOME/.config/oressh/$host/.local.inputrc)
+	[[ -f "$HOME/.config/oressh/$host/.local.vimrc" ]] && local vimrc_filepath_list+=($HOME/.config/oressh/$host/.local.vimrc)
+	[[ -f "$HOME/.config/oressh/$host/.local.bashrc" ]] && local bashrc_filepath_list+=($HOME/.config/oressh/$host/.local.bashrc)
+	debug ".inpurc:[${inputrc_filepath_list[*]}]"
+	debug ".vimrc :[${vimrc_filepath_list[*]}]"
+	debug ".bashrc:[${bashrc_filepath_list[*]}]"
 
 	# FYI: [How to fix the /dev/fd/63: No such file or directory? – Site Title]( https://jaredsburrows.wordpress.com/2014/06/25/how-to-fix-the-devfd63-no-such-file-or-directory/ )
 	# NOTE: This command has side effect
@@ -63,29 +69,30 @@ function oressh() {
 	ssh -t -t $host "$enable_process_substitution_cmd; bash -c '$bash_cmd --rcfile <( echo -e " \
 		$({
 			# .vimrc
-			if [[ -n $vimrc_filepath ]]; then
-				echo 'type vim >/dev/null 2>&1 && function vim() { command vim -u '$(cat_base64_fd $vimrc_filepath)' $@ ; }'
-				echo 'type vi  >/dev/null 2>&1 && function vi()  { command vi  -u '$(cat_base64_fd $vimrc_filepath)' $@ ; }'
+			if [[ ${#vimrc_filepath_list[@]} -gt 0 ]]; then
+				echo 'type vim >/dev/null 2>&1 && function vim() { command vim -u '$(cat_base64_fd "${vimrc_filepath_list[@]}")' $@ ; }'
+				echo 'type vi  >/dev/null 2>&1 && function vi()  { command vi  -u '$(cat_base64_fd "${vimrc_filepath_list[@]}")' $@ ; }'
 			fi
 			# .inputrc
 			# NOTE: bind -f .inputrc: not load properly using process substitution (maybe read file twice?)
 			# maybe bind -f read file twice? (process substitution can be only once)
-			if [[ -n $inputrc_filepath ]]; then
-				echo 'function _cat_inputrc(){ echo '$(cat_base64 $inputrc_filepath)'; }'
+			if [[ ${#inputrc_filepath_list[@]} -gt 0 ]]; then
+				echo 'function _cat_inputrc(){ echo '$(cat_base64 "${inputrc_filepath_list[@]}")'; }'
 				echo 'function _bind_inputrc(){ local tmpinputrc=$(mktemp); [[ -f $tmpinputrc ]] && _cat_inputrc > $tmpinputrc && bind -f $tmpinputrc; [[ -f $tmpinputrc ]] && rm -rf $tmpinputrc; }'
 				echo '_bind_inputrc'
 			fi
 			# .bashrc
-			if [[ -n $bashrc_filepath ]]; then
-				cat $bashrc_filepath
+			if [[ ${#bashrc_filepath_list[@]} -gt 0 ]]; then
+				cat "${bashrc_filepath_list[@]}"
 			fi
 		} | local_base64encode) \
 		" | $remote_base64decode)'"
 }
 
+# NOTE: any number of files ok
 function cat_base64() {
 	[[ $# == 0 ]] && return 1
-	echo -n $(cat $1 | local_base64encode)' | '$remote_base64decode
+	echo -n $(cat "$@" | local_base64encode)' | '$remote_base64decode
 }
 function cat_base64_fd() {
 	[[ $# == 0 ]] && return 1

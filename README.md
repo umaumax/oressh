@@ -22,6 +22,7 @@ oressh [host]
 * hostの接続先によって、設定ファイルを選択する(読み込ませたくないファイルがある場合には，同名のファイルをそのhostに対応する場所に作成する)
   * `~/.config/oressh/default/`: 共通の処理
   * `~/.config/oressh/$host_name/`: each host
+  * `~/.config/oressh/$host_name/.local.xxx`: each host (additional load)
 * `.inputrc`は`bind -f`によって，2回`open/close`されるので，process substitutionは使用できない
   * `strace bind -f ~/.inputrc`
 
