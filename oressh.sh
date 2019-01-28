@@ -65,14 +65,14 @@ function oressh() {
 			# .vimrc
 			if [[ -n $vimrc_filepath ]]; then
 				echo 'type vim >/dev/null 2>&1 && function vim() { command vim -u '$(cat_base64_fd $vimrc_filepath)' $@ ; }'
-				echo 'type vi  >/dev/null 2>&1 && function vi()  { command vim -u '$(cat_base64_fd $vimrc_filepath)' $@ ; }'
+				echo 'type vi  >/dev/null 2>&1 && function vi()  { command vi  -u '$(cat_base64_fd $vimrc_filepath)' $@ ; }'
 			fi
 			# .inputrc
 			# NOTE: bind -f .inputrc: not load properly using process substitution (maybe read file twice?)
 			# maybe bind -f read file twice? (process substitution can be only once)
 			if [[ -n $inputrc_filepath ]]; then
 				echo 'function _cat_inputrc(){ echo '$(cat_base64 $inputrc_filepath)'; }'
-				echo 'function _bind_inputrc(){ local tmpinputrc=$(mktemp); [[ -f $tmpinputrc ]] && _cat_inputrc > $tmpinputrc && bind -f $tmpinputrc; [[ -f $tmpinputrc ]] && echo rm -rf $tmpinputrc; }'
+				echo 'function _bind_inputrc(){ local tmpinputrc=$(mktemp); [[ -f $tmpinputrc ]] && _cat_inputrc > $tmpinputrc && bind -f $tmpinputrc; [[ -f $tmpinputrc ]] && rm -rf $tmpinputrc; }'
 				echo '_bind_inputrc'
 			fi
 			# .bashrc
