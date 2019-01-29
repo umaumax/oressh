@@ -56,9 +56,9 @@ function oressh() {
 	local inputrc_filepath_list=($default_inputrc_filepath)
 	local vimrc_filepath_list=($default_vimrc_filepath)
 	local bashrc_filepath_list=($default_bashrc_filepath)
-	[[ -f "$HOME/.config/oressh/$host/.local.inputrc" ]] && local inputrc_filepath_list+=($HOME/.config/oressh/$host/.local.inputrc)
-	[[ -f "$HOME/.config/oressh/$host/.local.vimrc" ]] && local vimrc_filepath_list+=($HOME/.config/oressh/$host/.local.vimrc)
-	[[ -f "$HOME/.config/oressh/$host/.local.bashrc" ]] && local bashrc_filepath_list+=($HOME/.config/oressh/$host/.local.bashrc)
+	[[ -f "$HOME/.config/oressh/$host/.local.inputrc" ]] && local inputrc_filepath_list=($inputrc_filepath_list $HOME/.config/oressh/$host/.local.inputrc)
+	[[ -f "$HOME/.config/oressh/$host/.local.vimrc" ]] && local vimrc_filepath_list=($vimrc_filepath_list $HOME/.config/oressh/$host/.local.vimrc)
+	[[ -f "$HOME/.config/oressh/$host/.local.bashrc" ]] && local bashrc_filepath_list=($bashrc_filepath_list $HOME/.config/oressh/$host/.local.bashrc)
 	debug ".inpurc:[${inputrc_filepath_list[*]}]"
 	debug ".vimrc :[${vimrc_filepath_list[*]}]"
 	debug ".bashrc:[${bashrc_filepath_list[*]}]"
