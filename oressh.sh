@@ -71,7 +71,7 @@ function oressh() {
 			# .vimrc
 			if [[ ${#vimrc_filepath_list[@]} -gt 0 ]]; then
 				echo 'type vim >/dev/null 2>&1 && function vim() { command vim -u '$(cat_base64_fd "${vimrc_filepath_list[@]}")' $@ ; }'
-				echo 'type vi  >/dev/null 2>&1 && function vi()  { command vi  -u '$(cat_base64_fd "${vimrc_filepath_list[@]}")' $@ ; }'
+				# echo 'type vi  >/dev/null 2>&1 && function vi()  { command vi  -u '$(cat_base64_fd "${vimrc_filepath_list[@]}")' $@ ; }'
 			fi
 			# .inputrc
 			# NOTE: bind -f .inputrc: not load properly using process substitution (maybe read file twice?)
