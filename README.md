@@ -14,6 +14,7 @@ oressh [host]
 ```
 
 ## NOTE
+* `--rcfile`と`--login`は共存しないため，`shopt login_shell`はfalseとなるので注意
 * ssh先の環境を汚さずにoreore bashとoreore vimの設定を利用する
 * functionやaliasではsshpassから使用できないため，コマンドとして提供
 * defaultでpythonを利用して，base64のencodeとdecodeを行う(at both local host and remote host)
@@ -37,4 +38,8 @@ chmod u+x oressh
 ```
 
 ## FYI
-[シェル芸で、ローカルにあるbashrcやvimrcをssh接続先で\(ファイルをコピーとかせずに\)利用する \| 俺的備忘録 〜なんかいろいろ〜]( https://orebibou.com/2018/10/%E3%82%B7%E3%82%A7%E3%83%AB%E8%8A%B8%E3%81%A7%E3%80%81%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AB%E3%81%82%E3%82%8Bbashrc%E3%82%84vimrc%E3%82%92ssh%E6%8E%A5%E7%B6%9A%E5%85%88%E3%81%A7%E3%83%95/ )
+* [シェル芸で、ローカルにあるbashrcやvimrcをssh接続先で\(ファイルをコピーとかせずに\)利用する \| 俺的備忘録 〜なんかいろいろ〜]( https://orebibou.com/2018/10/%E3%82%B7%E3%82%A7%E3%83%AB%E8%8A%B8%E3%81%A7%E3%80%81%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AB%E3%81%82%E3%82%8Bbashrc%E3%82%84vimrc%E3%82%92ssh%E6%8E%A5%E7%B6%9A%E5%85%88%E3%81%A7%E3%83%95/ )
+* [sshrc: ssh時に\.bashrc設定等をssh先に持っていけるコマンド]( https://rcmdnk.com/blog/2018/01/31/computer-bash-zsh-network/ )
+
+* [bashrcの設定の読み込まれる順番 \- それマグで！]( http://takuya-1st.hatenablog.jp/entry/20110102/1293970212 )
+* [bashの設定ファイルの読み込みが複雑すぎて混乱する \- ぱせらんメモ]( https://pasela.hatenablog.com/entry/20090209/bash )

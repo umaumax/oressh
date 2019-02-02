@@ -44,11 +44,11 @@ function oressh() {
 		fi
 	fi
 
-	# NOTE: bash-3.2ではなぜか正常な動作とならないので，macの場合には無理やりlocalの方のbashを参照
-	# NOTE: sh cannot parse $(() || ()) or [[ ]], and can't use process replace <(), so wrap entire command as bash
-	# NOTE: したがって，bashでwrapしている
-	# NOTE: 注意点として，shoptからlogin shellではないことになっている
-	local bash_cmd='$( ( [ -e /usr/local/bin/bash ] && echo /usr/local/bin/bash ) || ( [ -e /bin/bash ] && echo /bin/bash ) )'
+	# NOTE: * I don't why bash-3.2 run properly, but I force use maybe newer bash (which is in /usr/local)
+	# NOTE: * sh cannot parse $(() || ()) or [[ ]], and can't use process replace <(), so wrap entire command as bash
+	# NOTE:   * so, wrapping by bash not sh
+	# NOTE: * how to confirm login shell? shopt | grep login_shell
+	local bash_filepath='$( ( [ -e /usr/local/bin/bash ] && echo /usr/local/bin/bash ) || ( [ -e /bin/bash ] && echo /bin/bash ) )'
 
 	local default_inputrc_filepath=$(find_exist_file "$HOME/.config/oressh/$host/.inputrc" "$HOME/.config/oressh/default/.inputrc")
 	local default_vimrc_filepath=$(find_exist_file "$HOME/.config/oressh/$host/.vimrc" "$HOME/.config/oressh/default/.vimrc")
@@ -66,7 +66,8 @@ function oressh() {
 	# FYI: [How to fix the /dev/fd/63: No such file or directory? – Site Title]( https://jaredsburrows.wordpress.com/2014/06/25/how-to-fix-the-devfd63-no-such-file-or-directory/ )
 	# NOTE: This command has side effect
 	local enable_process_substitution_cmd='[[ $USER == "root" ]] && [[ ! -e /dev/fd ]] && ln -s /proc/self/fd /dev/fd'
-	ssh -t -t $host "$enable_process_substitution_cmd; bash -c '$bash_cmd --rcfile <( echo -e " \
+	# NOTE: don't use --login and --rcfile sametime
+	ssh -t -t $host "$enable_process_substitution_cmd; bash -c '$bash_filepath --rcfile <( echo -e " \
 		$({
 			# .vimrc
 			if [[ ${#vimrc_filepath_list[@]} -gt 0 ]]; then
