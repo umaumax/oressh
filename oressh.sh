@@ -69,6 +69,7 @@ function oressh() {
 	# NOTE: don't use --login and --rcfile sametime
 	ssh -t -t $host "$enable_process_substitution_cmd; bash -c '$bash_filepath --rcfile <( echo -e " \
 		$({
+			echo "export ORESSH_HOST='$host'"
 			# .vimrc
 			if [[ ${#vimrc_filepath_list[@]} -gt 0 ]]; then
 				echo 'type vim >/dev/null 2>&1 && function vim() { command vim -u '$(cat_base64_fd "${vimrc_filepath_list[@]}")' $@ ; }'
