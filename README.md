@@ -14,6 +14,7 @@ oressh [host]
 ```
 
 ## NOTE
+* You can use `ORESSH_HOST` environment variable at `.bashrc`.
 * `--rcfile`と`--login`は共存しないため，`shopt login_shell`はfalseとなるので注意
 * ssh先の環境を汚さずにoreore bashとoreore vimの設定を利用する
 * functionやaliasではsshpassから使用できないため，コマンドとして提供
