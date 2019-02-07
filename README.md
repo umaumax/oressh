@@ -30,12 +30,10 @@ oressh [host]
 
 ## TODO
 * write help command
-* READMEの充実
 
 ### for wgit
 ```
-https://github.com/umaumax/oressh/blob/master/oressh.sh oressh
-chmod u+x oressh
+https://github.com/umaumax/oressh/blob/master/oressh
 ```
 
 ## FYI
