@@ -34,6 +34,7 @@ oressh [host]
 ### for wgit
 ```
 https://github.com/umaumax/oressh/blob/master/oressh
+chmod u+x oressh
 ```
 
 ## FYI
