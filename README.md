@@ -14,6 +14,7 @@ oressh [host]
 ```
 
 ## NOTE
+* This tool can accept only hostname, so if you want to use other args (e.g. -p 10022), use `~/.ssh/config`.
 * You can use `ORESSH_HOST` environment variable at `.bashrc`.
 * `--rcfile`と`--login`は共存しないため，`shopt login_shell`はfalseとなるので注意
 * ssh先の環境を汚さずにoreore bashとoreore vimの設定を利用する
