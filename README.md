@@ -4,12 +4,12 @@
   * create oreore environment on remote machine with minimal side effect
 
 ## how to use
-```
+``` bash
 oressh [ssh target host]
 ```
 
 ## settings
-```
+``` bash
 ~/.config/oressh/{default,$host_name,...}/{.bashrc,.inputrc,.vimrc}
 ```
 
@@ -17,6 +17,8 @@ oressh [ssh target host]
 * This tool can accept only hostname, so if you want to use other args (e.g. -p 10022), use `~/.ssh/config`.
 * You can use `ORESSH_HOST` environment variable at `.bashrc`.
 * `--rcfile`と`--login`は共存しないため，`shopt login_shell`はfalseとなるので注意
+* [bash \- What is the difference between \-\-init\-file and \-\-rcfile? \- Ask Ubuntu]( https://askubuntu.com/questions/760749/what-is-the-difference-between-init-file-and-rcfile )
+  * `--init-file` and `--rcfile` are same option
 * functionやaliasではsshpassから使用できないため，`oressh`コマンドとして提供
 * defaultでpythonを利用して，base64のencodeとdecodeを行う(at both local host and remote host)
   * env `NO_PYTHON_BASE64`に何かしらの値を設定すると`base64`コマンドを利用する
