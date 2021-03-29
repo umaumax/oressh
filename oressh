@@ -90,9 +90,9 @@ function oressh() {
   # NOTE: don't use --login and --rcfile sametime
   if [[ "$ORESSH_USE_PS" == 0 ]]; then
     # some environment ignore --rcfile <()
-    ssh -t -t $host "$bashrc_gen_cmd > ._tmp_bashrc; echo 'rm ._tmp_bashrc' >> ._tmp_bashrc; $bash_filepath --rcfile ._tmp_bashrc"
+    ssh -t -t $host "$bashrc_gen_cmd > ._tmp_bashrc; echo 'rm ._tmp_bashrc' >> ._tmp_bashrc; exec $bash_filepath --rcfile ._tmp_bashrc"
   else
-    ssh -t -t $host "$enable_process_substitution_cmd; $bash_filepath --rcfile <($bashrc_gen_cmd)"
+    ssh -t -t $host "$enable_process_substitution_cmd; exec $bash_filepath --rcfile <($bashrc_gen_cmd)"
   fi
 }
 
