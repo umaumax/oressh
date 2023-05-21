@@ -225,3 +225,6 @@ if type >/dev/null 2>&1 docker; then
     docker exec -it $container_id /bin/bash
   }
 fi
+
+export TERM=xterm-256color
+export PS1='\[\e[1;33m\]\u@'"$ORESSH_HOST"'[\h] \w\n\[\e[1;36m\]\$\[\e[m\] '
