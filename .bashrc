@@ -226,5 +226,21 @@ if type >/dev/null 2>&1 docker; then
   }
 fi
 
+# If you enable next line, you can expand alias even after sudo command.
+# alias sudo='sudo '
+
+if type >/dev/null 2>&1 nerdctl; then
+  alias n='nerdctl'
+fi
+if type >/dev/null 2>&1 kubectl; then
+  alias k='kubectl'
+  alias kgp='kubectl get pods'
+  alias kl='kubectl logs'
+  alias kd='kubectl describe'
+fi
+# When the space key is entered, expand alias if it is expandable.
+bind '"\C-xa": alias-expand-line'
+bind '" ": "\C-xa\C-v "'
+
 export TERM=xterm-256color
 export PS1='\[\e[1;33m\]\u@'"$ORESSH_HOST"'[\h] \w\n\[\e[1;36m\]\$\[\e[m\] '
